@@ -1,7 +1,5 @@
 import pytest
 from pages.checkout_page import CheckoutPage
-from locators.ordercomplite_page_locators import OrderComlitePageLocators
-from locators.main_page_locators import MainPageLocators
 from utils.data import test_cases_complete
 import allure
 
@@ -13,20 +11,39 @@ class TestCheckout:
     def test_checkout_page(self, name, last_name, adres, metro, phone, when, days, comm):
         checkout_page = CheckoutPage(self.driver)
 
-        checkout_page.click_button_up()
-        checkout_page.fill_first_page_form(name, last_name, adres, metro, phone)
-        checkout_page.click_button_next()
-        checkout_page.fill_second_page_form(when, days, comm)
+        with allure.step("Нажать кнопку 'Заказать' вверху страницы"):
+            checkout_page.click_button_up()
+        
+        with allure.step("Заполнить первую страницу формы данными"):
+            checkout_page.fill_first_page_form(name, last_name, adres, metro, phone)
+        
+        with allure.step("Нажать кнопку 'Далее'"):
+            checkout_page.click_button_next()
+        
+        with allure.step("Заполнить вторую страницу формы данными"):
+            checkout_page.fill_second_page_form(when, days, comm)
 
-        checkout_page.click_order()
-        checkout_page.click_yes()
+        with allure.step("Нажать кнопку 'Заказать'"):
+            checkout_page.click_order()
+        
+        with allure.step("Подтвердить заказ в модальном окне"):
+            checkout_page.click_yes()
 
-        assert checkout_page.is_order_success_displayed()
+        with allure.step("Проверить успешное оформление заказа"):
+            assert checkout_page.is_order_success_displayed()
 
-        checkout_page.click_status()
-        checkout_page.click_scuter()
-        assert checkout_page.is_scuter_displayed()
+        with allure.step("Нажать кнопку 'Статус заказа'"):
+            checkout_page.click_status()
+        
+        with allure.step("Нажать на логотип Самоката"):
+            checkout_page.click_scuter()
+        
+        with allure.step("Проверить отображение главной страницы"):
+            assert checkout_page.is_scuter_displayed()
 
-        checkout_page.click_yandex()
-        assert checkout_page.is_dzen_in_url()
+        with allure.step("Нажать на логотип Яндекса"):
+            checkout_page.click_yandex()
+        
+        with allure.step("Проверить переход на страницу Dzen"):
+            assert checkout_page.is_dzen_in_url()
         

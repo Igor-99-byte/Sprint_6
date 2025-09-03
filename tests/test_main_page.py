@@ -10,8 +10,12 @@ class TestMain:
     @allure.title("Тест вопроса с ожидаемым ответом")
     def test_main_questions_have_correct_answers(self, question_index, expected_text):
         main_page = MainPage(self.driver)
-        main_page.click_question(question_index)
         
-        actual_text = main_page.get_answer_text(question_index)
+        with allure.step(f"Нажать на вопрос с индексом {question_index}"):
+            main_page.click_question(question_index)
         
-        assert actual_text == expected_text
+        with allure.step(f"Получить текст ответа для вопроса {question_index}"):
+            actual_text = main_page.get_answer_text(question_index)
+        
+        with allure.step(f"Проверить, что текст ответа соответствует ожидаемому: {expected_text}"):
+            assert actual_text == expected_text
