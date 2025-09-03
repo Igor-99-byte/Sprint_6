@@ -1,140 +1,95 @@
-from locators.main_page_locators import MainPageLocators
-from selenium.webdriver.support.ui import WebDriverWait
-from locators.actionconfirmation_page_locators import ActionConfirmationPageLocators
-from locators.ordercomplite_page_locators import OrderComlitePageLocators
-from locators.base_page_locators import BasePageLocators
+from pages.base_page import BasePage
 from locators.checkout_page_locators import CheckoutPageLocatorsOne, CheckoutPageLocatorsTwo
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from locators.main_page_locators import MainPageLocators
+from locators.actionconfirmation_page_locators import ActionConfirmationPageLocators
+from locators.base_page_locators import BasePageLocators
+from locators.ordercomplite_page_locators import OrderComlitePageLocators
 
-
-class CheckoutPage:
+class CheckoutPage(BasePage):
     def __init__(self, driver):
-        self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
-
+        super().__init__(driver)
+        
     def click_button_up(self):
-        element = self.wait.until(
-            EC.element_to_be_clickable(MainPageLocators.BATTON_UP)
-        )
-        element.click()
-
+        self.click(MainPageLocators.BATTON_UP)
+    
     def fill_name(self, name):
-        Name = self.wait.until(
-        EC.element_to_be_clickable(CheckoutPageLocatorsOne.FIELD_NAME)
-        )
-        Name.send_keys(name)
-
+        self.type_text(CheckoutPageLocatorsOne.FIELD_NAME, name)
+    
     def fill_last_name(self, last_name):
-        Last_name = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsOne.FIELD_LAST_NAME)
-        )
-        Last_name.send_keys(last_name)
-
+        self.type_text(CheckoutPageLocatorsOne.FIELD_LAST_NAME, last_name)
+    
     def fill_adres(self, adres):
-        Adres = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsOne.FIELD_ADRES)
-        )
-        Adres.send_keys(adres)
-
+        self.type_text(CheckoutPageLocatorsOne.FIELD_ADRES, adres)
+    
     def fill_metro(self, metro):
-        dropdown = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsOne.FIELD_METRO)
-        )
-        dropdown.click()
-        
-        options_list = self.wait.until(
-            EC.presence_of_element_located(CheckoutPageLocatorsOne.FIELD_METRO)
-        )
-        
-        desired_option = options_list.find_element(By.XPATH, f"//button[@value={metro}]")
-        desired_option.click()
-
+        self.click(CheckoutPageLocatorsOne.FIELD_METRO)
+        metro_option = (By.XPATH, f"//button[@value='{metro}']")
+        self.click(metro_option)
+    
     def fill_phone(self, phone):
-        Phone = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsOne.FIELD_PHONE)
-        )
-        Phone.send_keys(phone)
-
+        self.type_text(CheckoutPageLocatorsOne.FIELD_PHONE, phone)
+    
     def fill_first_page_form(self, name, last_name, adres, metro, phone):
         self.fill_name(name)
         self.fill_last_name(last_name)
         self.fill_adres(adres)
         self.fill_metro(metro)
         self.fill_phone(phone)
-
+        self.click_button_next()
+    
     def click_button_next(self):
-        Button_next = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsOne.BUTTON_NEXT)
-        )
-        Button_next.click()
-
+        self.click(CheckoutPageLocatorsOne.BUTTON_NEXT)
+    
     def fill_when(self, when):
-        calendar_field = self.wait.until(
-        EC.element_to_be_clickable(CheckoutPageLocatorsTwo.FIELD_WHEN)
-    )
-        calendar_field.click()
+        self.click(CheckoutPageLocatorsTwo.FIELD_WHEN)
         
-        day_element = self.wait.until(
-            EC.element_to_be_clickable((By.XPATH, f"//div[@aria-label='Choose {when}']"))
-        )
-        day_element.click()
-
+        day_locator = (By.XPATH, f"//div[@aria-label='Choose {when}']")
+        self.click(day_locator)
+    
     def fill_days(self, days):
-        dropdown = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsTwo.FIELD_DAYS)
-        )
-        dropdown.click()
+        self.click(CheckoutPageLocatorsTwo.FIELD_DAYS)
         
-        option = self.wait.until(
-            EC.element_to_be_clickable((By.XPATH, f"//div[@class='Dropdown-menu']//div[{days}]"))
-        )
-        option.click()
-
+        option_locator = (By.XPATH, f"//div[@class='Dropdown-menu']//div[{days}]")
+        self.click(option_locator)
+    
     def fill_colour(self):
-        Colour = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsTwo.FIELD_BLACK)
-        )
-        Colour.click()
+        self.click(CheckoutPageLocatorsTwo.FIELD_BLACK)
     
     def fill_com(self, comm):
-        Comm = self.wait.until(
-        EC.element_to_be_clickable(CheckoutPageLocatorsTwo.FIELD_COM)
-        )
-        Comm.send_keys(comm)
-
+        self.type_text(CheckoutPageLocatorsTwo.FIELD_COM, comm)
+    
     def fill_second_page_form(self, when, days, comm):
         self.fill_when(when)
         self.fill_days(days)
         self.fill_colour()
         self.fill_com(comm)
-
+        self.click_order()
+    
     def click_order(self):
-        Button_order = self.wait.until(
-            EC.element_to_be_clickable(CheckoutPageLocatorsTwo.BUTTON_ORDER)
-        )
-        Button_order.click()
-
+        self.click(CheckoutPageLocatorsTwo.BUTTON_ORDER)
+    
     def click_yes(self):
-        Yes = self.wait.until(
-            EC.element_to_be_clickable(ActionConfirmationPageLocators.BUTTON_YES)
-        )
-        Yes.click()
-
+        self.click(ActionConfirmationPageLocators.BUTTON_YES)
+    
     def click_status(self):
-        status = self.wait.until(
-            EC.element_to_be_clickable(OrderComlitePageLocators.BUTTON_STATUS)
-        )
-        status.click()
-
+        self.click(OrderComlitePageLocators.BUTTON_STATUS)
+    
     def click_scuter(self):
-        scuter = self.wait.until(
-            EC.element_to_be_clickable(BasePageLocators.BUTTON_SCOOTER)
-        )
-        scuter.click()
-
+        self.click(BasePageLocators.BUTTON_SCOOTER)
+    
     def click_yandex(self):
-        yandex = self.wait.until(
-            EC.element_to_be_clickable(BasePageLocators.BUTTON_YANDEX)
+        self.click(BasePageLocators.BUTTON_YANDEX)
+
+    def is_order_success_displayed(self):
+        success_element = self.wait.until(
+            EC.visibility_of_element_located(OrderComlitePageLocators.NAME)
         )
-        yandex.click()
+        return "Заказ оформлен" in success_element.text
+    
+    def is_scuter_displayed(self):
+        return self.driver.find_element(MainPageLocators.SCUTER).is_displayed()
+    
+    def is_dzen_in_url(self):
+        return "dzen" in self.driver.current_url

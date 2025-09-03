@@ -1,12 +1,9 @@
+from pages.base_page import BasePage
 from locators.main_page_locators import MainPageLocators
-from selenium.webdriver.support.ui import WebDriverWait
-import time
-from selenium.webdriver.support import expected_conditions as EC
 
-class MainPage:
+class MainPage(BasePage):
     def __init__(self, driver):
-        self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        super().__init__(driver)
         self.question_locators = [
             MainPageLocators.SELECT_1,
             MainPageLocators.SELECT_2,
@@ -29,17 +26,11 @@ class MainPage:
         ]
     
     def click_question(self, index):
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(1)
-        element = self.wait.until(
-            EC.element_to_be_clickable(self.question_locators[index])
-        )
-        self.driver.execute_script("arguments[0].scrollIntoView();", element)
-        time.sleep(1)
-        element.click()
+        self.scroll_to_element(self.question_locators[index])
+        self.click(self.question_locators[index])
     
     def get_answer_text(self, index):
-        element = self.wait.until(
-            EC.visibility_of_element_located(self.answer_locators[index])
-        )
-        return element.text
+        return self.get_text(self.answer_locators[index])
+    
+    def is_answer_visible(self, index):
+        return self.is_displayed(self.answer_locators[index])
